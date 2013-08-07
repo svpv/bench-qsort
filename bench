@@ -1,0 +1,21 @@
+#!/bin/bash -efu
+
+int-bench()
+{
+    printf '%s\t' "$1"
+    shift
+    ${GCC:-gcc} -g -Wall ${OPT:--O2} -std=gnu99 "$@" bench-int-sort.c
+    ./a.out
+}
+
+for i in `seq 1 9`; do
+    int-bench "1K $i-int array (random)  " -DS=$i -DN=$((1<<10)) -DI=$((32<<10))
+    int-bench "1K $i-int array (mod 32)  " -DS=$i -DN=$((1<<10)) -DI=$((32<<10)) -DMOD=32
+    int-bench "1K $i-int array (sorted)  " -DS=$i -DN=$((1<<10)) -DI=$((32<<10)) -DORD=1
+    int-bench "1K $i-int array (reversed)" -DS=$i -DN=$((1<<10)) -DI=$((32<<10)) -DREV=1
+
+    int-bench "1M $i-int array (random)  " -DS=$i -DN=$((1<<20)) -DI=16
+    int-bench "1M $i-int array (mod 1024)" -DS=$i -DN=$((1<<20)) -DI=16 -DMOD=1024
+    int-bench "1M $i-int array (sorted)  " -DS=$i -DN=$((1<<20)) -DI=16 -DORD=1
+    int-bench "1M $i-int array (reversed)" -DS=$i -DN=$((1<<20)) -DI=16 -DREV=1
+done
