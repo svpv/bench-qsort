@@ -53,6 +53,7 @@ static double bench(void)
 	assert(a[S * (i - 1)] <= a[S * i]);
 	/* check stable sort using second integer */
 #if S > 1
+	if (sizeof(T) >= sizeof(int))
 	assert(a[S * (i - 1)] < a[S * i] ||
 	       a[S * (i - 1) + 1] < a[S * i + 1]);
 #endif
