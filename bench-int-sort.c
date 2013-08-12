@@ -60,9 +60,6 @@ static void bench(void)
 #endif
     }
 
-    /* Dummy system call. */
-    getpid();
-
     qsort(a, N, S * sizeof(T), cmp);
 
 #if STABLE
