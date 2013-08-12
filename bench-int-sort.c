@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <time.h>
+#include <unistd.h>
+#include <sys/times.h>
 #include <math.h>
 
 /* Basic integer type. */
@@ -81,13 +83,20 @@ static double bench(void)
 
 int main(void)
 {
+    /* At least two runs, at least 5 seconds. */
     double sec = bench();
     size_t iter = 1;
-    /* At least two runs, at least 5 seconds. */
     do {
 	sec += bench();
 	iter++;
     } while (sec < 5.0);
+
+    /* Mix in user time. */
+    struct tms tms;
+    times(&tms);
+    sec += tms.tms_utime / sysconf(_SC_CLK_TCK);
+    sec /= 2.0;
+
     /*
      * User time in nanoseconds divided by N log N, which would be flat if
      * user time was truly proportional to N log N.  See [C. Eric Wu, Gokul
