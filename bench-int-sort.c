@@ -86,11 +86,9 @@ int main(void)
     times(&tms);
     clock_t start = tms.tms_utime;
 
-    /* At least three runs, at least 5 seconds. */
+    /* At least 5 seconds. */
     double sec;
-    bench();
-    bench();
-    size_t iter = 2;
+    size_t iter = 0;
     do {
 	bench();
 	iter++;
