@@ -3,25 +3,31 @@
 #include <assert.h>
 #include <time.h>
 
+/* Basic integer type. */
 #ifndef T
 #define T int
 #endif
 
-/* compare by the first integer */
+/* Number of records. */
+#ifndef N
+#define N (1 << 20)
+#endif
+
+/* Each record is S integers. */
+#ifndef S
+#define S 2
+#endif
+
+/* Array of records. */
+T a[N * S];
+
+/* Compare by the first integer. */
 static int cmp(const void *a, const void *b)
 {
     return *(T *) a - *(T *) b;
 }
 
-#ifndef N
-#define N (1 << 20)
-#endif
-#ifndef S
-#define S 2
-#endif
-T a[N * S];
-
-/* benchmark array sort */
+/* Benchmark array sort. */
 static double bench(void)
 {
     for (size_t i = 0; i < N; i++) {
@@ -49,9 +55,9 @@ static double bench(void)
     ticks = clock() - ticks;
 
     for (size_t i = 1; i < N; i++) {
-	/* first integers are now ordered */
+	/* First integers are now ordered. */
 	assert(a[S * (i - 1)] <= a[S * i]);
-	/* check stable sort using second integer */
+	/* Check stable sort using second integer. */
 #if S > 1
 	if (sizeof(T) >= sizeof(int))
 	assert(a[S * (i - 1)] < a[S * i] ||
@@ -62,6 +68,7 @@ static double bench(void)
     return ticks / (double) CLOCKS_PER_SEC;
 }
 
+/* Number of iteratsions. */
 #ifndef I
 #define I 16
 #endif
