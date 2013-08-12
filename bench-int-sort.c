@@ -36,7 +36,7 @@ static int cmp(const void *a, const void *b)
 #endif
 
 /* Benchmark array sort. */
-static double bench(void)
+static void bench(void)
 {
     for (size_t i = 0; i < N; i++) {
 #if ORD
@@ -61,9 +61,7 @@ static double bench(void)
     /* Dummy system call. */
     getpid();
 
-    time_t ticks = clock();
     qsort(a, N, S * sizeof(T), cmp);
-    ticks = clock() - ticks;
 
 #if STABLE
     T n = N;
@@ -80,25 +78,26 @@ static double bench(void)
 	       a[S * (i - 1) + 1] < a[S * i + 1]);
 #endif
     }
-
-    return ticks / (double) CLOCKS_PER_SEC;
 }
 
 int main(void)
 {
-    /* At least two runs, at least 5 seconds. */
-    double sec = bench();
-    size_t iter = 1;
-    do {
-	sec += bench();
-	iter++;
-    } while (sec < 5.0);
-
-    /* Mix in user time. */
+    double ticks = sysconf(_SC_CLK_TCK);
     struct tms tms;
     times(&tms);
-    sec += tms.tms_utime / sysconf(_SC_CLK_TCK);
-    sec /= 2.0;
+    clock_t start = tms.tms_utime;
+
+    /* At least three runs, at least 5 seconds. */
+    double sec;
+    bench();
+    bench();
+    size_t iter = 2;
+    do {
+	bench();
+	iter++;
+	times(&tms);
+	sec = (tms.tms_utime - start) / ticks;
+    } while (sec < 5.0);
 
     /*
      * User time in nanoseconds divided by N log N, which would be flat if
@@ -107,10 +106,7 @@ int main(void)
      */
     double ns = sec * 1e9 / iter / N / log2(N);
 
-    /*
-     * Standard deviation is supposed to be about 1% - so don't put much faith
-     * into the last digit.
-     */
+    /* Standard deviation is supposed to be below 0.5%. */
     printf("%.3g\n", ns);
     return 0;
 }
