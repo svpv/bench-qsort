@@ -1,0 +1,33 @@
+#!/bin/bash -efu
+
+morepow()
+{
+    for n in 1218 1448 1722; do
+	echo $((n*(1<<pow)/1024))
+    done
+}
+
+T=int
+maxpow=24
+for pow in `seq 4 $maxpow`; do
+for N in $((1<<pow)) $([ $pow = $maxpow ] || morepow) ; do
+    for S in `seq -w 3 16`; do
+        for x in direct indirect; do
+            ns=$(./bench-int-sort -DT=$T -DN=$N -DS=${S#0} $x-msort.c)
+            printf '%s\t%s\n' $N $ns >>$x-$S-$T-data
+        done
+    done
+done
+done
+
+for S in `seq -w 3 12`; do
+    gnuplot <<EOF
+set logscale x 2
+set terminal png size 1024,768
+set output "indirect-$S-$T.png"
+plot 'direct-$S-$T-data' using 1:2 lc rgb "coral" notitle, \
+     'direct-$S-$T-data' using 1:2 lc rgb "coral" smooth bezier title "direct ${S#0}-int", \
+   'indirect-$S-$T-data' using 1:2 lc rgb "blue"  notitle, \
+   'indirect-$S-$T-data' using 1:2 lc rgb "blue"  smooth bezier title "indirect ${S#0}-int"
+EOF
+done
