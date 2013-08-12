@@ -38,6 +38,8 @@ static int cmp(const void *a, const void *b)
 /* Benchmark array sort. */
 static void bench(void)
 {
+    static unsigned seed;
+
     for (size_t i = 0; i < N; i++) {
 #if ORD
 	/* already sorted */
@@ -47,10 +49,10 @@ static void bench(void)
 	a[S * i] = N - i - 1;
 #elif MOD
 	/* random in a range */
-	a[S * i] = rand() % MOD;
+	a[S * i] = rand_r(&seed) % MOD;
 #else
 	/* unrestrained random */
-	a[S * i] = rand();
+	a[S * i] = rand_r(&seed);
 #endif
 	/* save original order in second integer */
 #if S > 1
