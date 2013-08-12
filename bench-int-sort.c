@@ -58,6 +58,9 @@ static double bench(void)
 #endif
     }
 
+    /* Dummy system call. */
+    getpid();
+
     time_t ticks = clock();
     qsort(a, N, S * sizeof(T), cmp);
     ticks = clock() - ticks;
