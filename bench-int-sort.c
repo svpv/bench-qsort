@@ -27,6 +27,11 @@ static int cmp(const void *a, const void *b)
     return *(T *) a - *(T *) b;
 }
 
+/* Whether the sorintg algorithm is stable. */
+#ifndef STABLE
+#define STALBE 1
+#endif
+
 /* Benchmark array sort. */
 static double bench(void)
 {
@@ -54,12 +59,17 @@ static double bench(void)
     qsort(a, N, S * sizeof(T), cmp);
     ticks = clock() - ticks;
 
+#if STABLE
+    T n = N;
+    bool overflow = (n != N);
+#endif
+
     for (size_t i = 1; i < N; i++) {
 	/* First integers are now ordered. */
 	assert(a[S * (i - 1)] <= a[S * i]);
+#if STABLE
 	/* Check stable sort using second integer. */
-#if S > 1
-	if (sizeof(T) >= sizeof(int))
+	if (!overflow)
 	assert(a[S * (i - 1)] < a[S * i] ||
 	       a[S * (i - 1) + 1] < a[S * i + 1]);
 #endif
