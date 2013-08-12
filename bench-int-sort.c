@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <time.h>
+#include <math.h>
 
 /* Basic integer type. */
 #ifndef T
@@ -78,16 +79,20 @@ static double bench(void)
     return ticks / (double) CLOCKS_PER_SEC;
 }
 
-/* Number of iteratsions. */
-#ifndef I
-#define I 16
-#endif
-
 int main(void)
 {
     double sec = bench();
-    for (size_t i = 1; i < I; i++)
+    size_t iter = 1;
+    /* At least two runs, at least 5 seconds. */
+    do {
 	sec += bench();
-    printf("%g\n", sec);
+	iter++;
+    } while (sec < 5.0);
+    /*
+     * User time in nanoseconds divided by N log N, which would be flat if
+     * user time was truly proportional to N log N.  See [C. Eric Wu, Gokul
+     * Kandiraju, Pratap Pattnaik. High-Performance Sorting Algorithms on AIX].
+     */
+    printf("%.3g\n", sec * 1e9 / iter / N / log2(N));
     return 0;
 }
