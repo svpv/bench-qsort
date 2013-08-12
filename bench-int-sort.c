@@ -105,6 +105,12 @@ int main(void)
      * user time was truly proportional to N log N.  See [C. Eric Wu, Gokul
      * Kandiraju, Pratap Pattnaik. High-Performance Sorting Algorithms on AIX].
      */
-    printf("%.3g\n", sec * 1e9 / iter / N / log2(N));
+    double ns = sec * 1e9 / iter / N / log2(N);
+
+    /*
+     * Standard deviation is supposed to be about 1% - so don't put much faith
+     * into the last digit.
+     */
+    printf("%.3g\n", ns);
     return 0;
 }
