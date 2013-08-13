@@ -20,14 +20,20 @@ for N in $((1<<pow)) $([ $pow = $maxpow ] || morepow); do
 done
 done
 
+CPU=$(grep -m1 '^model name' /proc/cpuinfo |cut -d: -f2)
+
 for S in `seq -w 3 12`; do
-    gnuplot <<EOF
+    i586 gnuplot <<EOF
 set logscale x 2
+set xtics 4
+set title "$CPU, $(i586 uname -ms), gcc $(${CC:-gcc} -dumpversion)"
+set xlabel "Number of ${S#0}-int records"
+set ylabel "Unit cost, nanoseconds (user time / n log n)"
 set terminal png size 1024,768
 set output "indirect-$S-$T.png"
-plot 'direct-$S-$T-data' using 1:2 lc rgb "coral" notitle, \
-     'direct-$S-$T-data' using 1:2 lc rgb "coral" smooth bezier title "direct ${S#0}-int", \
-   'indirect-$S-$T-data' using 1:2 lc rgb "blue"  notitle, \
-   'indirect-$S-$T-data' using 1:2 lc rgb "blue"  smooth bezier title "indirect ${S#0}-int"
+plot 'direct-$S-$T-data' using 1:2 lc rgb "blue"  notitle, \
+     'direct-$S-$T-data' using 1:2 lc rgb "blue"  smooth bezier title "Direct ${S#0}-int sort", \
+   'indirect-$S-$T-data' using 1:2 lc rgb "coral" notitle, \
+   'indirect-$S-$T-data' using 1:2 lc rgb "coral" smooth bezier title "Indirect ${S#0}-int sort"
 EOF
 done
