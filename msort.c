@@ -45,7 +45,7 @@
 
 /* Maximum element size handled by the fast routine.
    Larger elements must be handled with indirect sort.  */
-#if REGSIZE > 32 && _STRING_ARCH_unaligned
+#if (REGSIZE > 32 && _STRING_ARCH_unaligned) || BENCH_INDIRECT
 #define FAST_MAX_BYTES (4 * 10)
 #else
 #define FAST_MAX_BYTES (4 * 8)

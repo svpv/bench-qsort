@@ -2,6 +2,7 @@
 #undef __SIZEOF_POINTER__
 #define __SIZEOF_POINTER__ 4
 
+#define BENCH_INDIRECT 1
 #define qsort not_qsort
 #include "msort.c"
 #undef qsort
