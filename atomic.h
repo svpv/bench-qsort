@@ -6,3 +6,10 @@
 #define _quicksort(b, n, s, cmp, arg) assert(!"quicksort")
 #define atomic_write_barrier()
 #define libc_hidden_def(x)
+#ifndef __GLIBC__
+typedef int (*__compar_d_fn_t)();
+typedef int (*__compar_fn_t)();
+#endif
+#ifndef _SC_LEVEL2_CACHE_SIZE
+#define _SC_LEVEL2_CACHE_SIZE -1
+#endif
