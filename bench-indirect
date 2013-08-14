@@ -21,12 +21,13 @@ done
 done
 
 CPU=$(grep -m1 '^model name' /proc/cpuinfo |cut -d: -f2)
+uname=$(uname -ms)
 
 for S in `seq -w 3 12`; do
-    i586 gnuplot <<EOF
+    gnuplot <<EOF
 set logscale x 2
 set xtics 4
-set title "$CPU, $(i586 uname -ms), gcc $(${CC:-gcc} -dumpversion)"
+set title "$CPU, $uname, gcc $(${CC:-gcc} -dumpversion)"
 set xlabel "Number of ${S#0}-int records"
 set ylabel "Unit cost, nanoseconds (user time / n log n)"
 set terminal png size 1024,768
