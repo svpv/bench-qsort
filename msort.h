@@ -79,12 +79,16 @@
       if (LESS (a4, a2))			\
 	{					\
 	  TYPE ax[SIZE];			\
-	  COPY1 (ax, a4);			\
+	  COPY1 (ax, a2);			\
+	  if (LESS (a4, a1))			\
+	    {					\
+	      COPY1 (a2, a1); 			\
+	      COPY1 (a1, a4);			\
+	    }					\
+	  else					\
+	    COPY1 (a2, a4);			\
 	  COPY1 (a4, a3);			\
-	  COPY1 (a3, a2);			\
-	  COPY1 (a2, ax);			\
-	  if (LESS (a2, a1))			\
-	    SWAP (a1, a2);			\
+	  COPY1 (a3, ax);			\
 	}					\
       else					\
 	{					\
