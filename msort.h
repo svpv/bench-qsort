@@ -69,7 +69,8 @@
 		  COPY1 (a2, a3);		\
 		  COPY1 (a3, ax);		\
 		}				\
-	      else {				\
+	      else				\
+		{				\
 		  COPY1 (a1, a2);		\
 		  COPY1 (a2, ax);		\
 		}				\
@@ -77,9 +78,16 @@
 	}					\
       else if (LESS (a3, a2))			\
 	{					\
-	  SWAP (a2, a3);			\
-	  if (LESS (a2, a1))			\
-	    SWAP (a1, a2);			\
+	  TYPE ax[SIZE];			\
+	  COPY1 (ax, a2);			\
+	  if (LESS (a3, a1))			\
+	    {					\
+	      COPY1 (a2, a1);			\
+	      COPY1 (a1, a3);			\
+	    }					\
+	  else					\
+	    COPY1(a2, a3);			\
+	  COPY1(a3, ax);			\
 	}					\
     }						\
   while (0)
