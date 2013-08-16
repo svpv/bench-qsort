@@ -57,19 +57,15 @@
 	{					\
 	  COPY1 (ax, a1);			\
 	  if (LESS (a3, a2))			\
-	    {					\
 	      COPY1 (a1, a3);			\
-	    }					\
 	  else					\
 	    {					\
-	      if (LESS (a3, a1))		\
-		{				\
-		  COPY1 (a1, a2);		\
-		  COPY1 (a2, a3);		\
-		}				\
+	      bool lt = LESS (a3, a1);		\
+	      COPY1 (a1, a2);			\
+	      if (lt)				\
+	        COPY1 (a2, a3);			\
 	      else				\
 		{				\
-		  COPY1 (a1, a2);		\
 		  COPY1 (a2, ax);		\
 		  break;			\
 		}				\
