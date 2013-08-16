@@ -92,10 +92,11 @@
 #define INSERT4(a1, a2, a3, a4)			\
   do						\
     {						\
+      TYPE ax[SIZE];				\
       if (LESS (a4, a2))			\
 	{					\
-	  TYPE ax[SIZE];			\
-	  COPY1 (ax, a2);			\
+	  COPY1 (ax, a3);			\
+	  COPY1 (a3, a2);			\
 	  if (LESS (a4, a1))			\
 	    {					\
 	      COPY1 (a2, a1); 			\
@@ -103,14 +104,18 @@
 	    }					\
 	  else					\
 	    COPY1 (a2, a4);			\
-	  COPY1 (a4, a3);			\
-	  COPY1 (a3, ax);			\
 	}					\
       else					\
 	{					\
 	  if (LESS (a4, a3))			\
-	    SWAP (a3, a4);			\
+	    {					\
+	      COPY1 (ax, a3);			\
+	      COPY1 (a3, a4);			\
+	    }					\
+	  else					\
+	    break;				\
 	}					\
+      COPY1 (a4, ax);				\
     }						\
   while (0)
 
