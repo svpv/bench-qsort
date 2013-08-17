@@ -28,6 +28,7 @@
 #include <errno.h>
 #include <atomic.h>
 #include <bits/wordsize.h>
+#include "copyfunc.h"
 
 /* CPU register size used for copying.  */
 #ifdef __x86_64__

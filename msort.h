@@ -24,10 +24,6 @@
 #define COPYU(dest, src, n)			\
   memcpy (dest, src, (n) * sizeof (TYPE))
 
-/* Copy one element.  */
-#define COPY1(dest, src)			\
-  COPYU(dest, src, SIZE)
-
 /* Swap 2 elements.  */
 #define SWAP(a, b)				\
   do						\
@@ -141,6 +137,14 @@
 
 #endif /* _FUNC_H */
 
+
+/* Copy one element.  */
+#ifndef COPY1
+#define COPY1(dest, src)			\
+  COPYU(dest, src, SIZE)
+#define DEFAULT_COPY1
+#endif
+
 /* Recursive nested function.  */
 auto void FUNC (TYPE * a, size_t n);
 
@@ -222,3 +226,8 @@ FUNC (TYPE * a, size_t n)
   /* Stage 4: write back.  */
   COPYU (a, TMP, t - (TYPE *) TMP);
 }
+
+#ifdef DEFAULT_COPY1
+#undef DEFAULT_COPY1
+#undef COPY1
+#endif

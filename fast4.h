@@ -1,7 +1,26 @@
-#ifndef CAT3
+#ifndef COPYSWITH_H
+#define COPYSWITH_H
+
+#define CAT2_(a, b) a ## b
+#define CAT2(a, b) CAT2_(a, b)
+
 #define CAT3_(a, b, c) a ## b ## c
 #define CAT3(a, b, c) CAT3_(a, b, c)
+
 #endif
+
+/* Function with specialized copy callback. */
+void (*copyfunc) ();
+#define CFUNC CAT2(NAME, C)
+#define FUNC CFUNC
+#define TYPE char
+#define SIZE s
+#define COPY1(dest, src) copyfunc (dest, src, s)
+#include HEADER
+#undef FUNC
+#undef TYPE
+#undef SIZE
+#undef COPY1
 
 /* Odd cases.  */
 #define TYPE uint32_t
@@ -60,6 +79,7 @@ case 7:
 
 #ifndef SKIP_CASE9
 case 9:
+#if 0
   {
 #define SIZE 9
 #define FUNC CAT3(NAME, 32x, SIZE)
@@ -68,6 +88,10 @@ case 9:
 #undef SIZE
 #undef FUNC
   }
+#else
+  copyfunc = copy32x9;
+  CFUNC(ARGS);
+#endif
   break;
 #endif
 
