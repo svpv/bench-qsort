@@ -161,17 +161,24 @@ FUNC (TYPE * a, size_t n)
   switch (n)
     {
     case 0:
-    case 1:
       /* Cannot happen.  */
+    case 1:
+#ifndef SMALLER_CODE
+      /* Cannot happen.  */
+#else
+      return;
+#endif
     case 2:
       SORT2 (a, a + SIZE);
       return;
+#ifndef SMALLER_CODE
     case 3:
     case 4:
       SORT3 (a, a + SIZE, a + 2 * SIZE);
       if (n == 4)
 	INSERT4 (a, a + SIZE, a + 2 * SIZE, a + 3 * SIZE);
       return;
+#endif
     }
 
   /* Divide into two halves.  */
