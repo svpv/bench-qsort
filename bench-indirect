@@ -13,7 +13,7 @@ for pow in `seq 4 $maxpow`; do
 for N in $((1<<pow)) $([ $pow = $maxpow ] || morepow); do
     for S in `seq -w 3 12`; do
         for x in direct indirect; do
-            ns=$(./bench-int-sort -DT=$T -DN=$N -DS=${S#0} $x-msort.c)
+            ns=$(./bench-int-sort -DT=$T -DN=$N -DS=${S#0} $x-msort.c "$@")
             printf '%s\t%s\n' $N $ns >>$x-$S-$T-data
         done
     done
