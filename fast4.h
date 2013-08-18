@@ -79,7 +79,7 @@ case 7:
 
 #ifndef SKIP_CASE9
 case 9:
-#if 0
+#ifndef COPY32
   {
 #define SIZE 9
 #define FUNC CAT3(NAME, 32x, SIZE)
